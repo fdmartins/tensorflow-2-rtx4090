@@ -72,6 +72,8 @@ echo 'export PATH=/usr/local/cuda-11.8/bin:$PATH' >>  ~/.bashrc
 
 echo 'export LD_LIBRARY_PATH=/usr/local/cuda-11.8/lib64:$LD_LIBRARY_PATH' >> ~/.bashrc
 
+export PATH=$PATH:/usr/local/cuda-11.8/bin/
+
 Reboot.
 
 # install cuDNN 8.6
@@ -102,7 +104,34 @@ sudo apt install bazel=5.3.0
 
 wget https://github.com/tensorflow/tensorflow/archive/refs/tags/v2.12.0-rc0.tar.gz
 
+tar -xzvf tensorflow-2.12.0-rc0.tar.gz
 
+cd tensorflow-2.12.0-rc0
+
+./configure
+
+dont forget to set yes for cuda, and NO for tensorRT.
+
+# BUILD! and get a coffe, this will take more than one hour and a lot of memory.
+
+bazel build --config=cuda --local_ram_resources=2048  //tensorflow/tools/pip_package:build_pip_package
+
+
+# BUILDING WITH CPU OPTIMIZATIONS:
+
+bazel build --config=cuda --copt=-march=native --copt=-DEIGEN_NO_DEBUG --cxxopt=-DEIGEN_NO_DEBUG --local_ram_resources=2048  //tensorflow/tools/pip_package:build_pip_package
+
+if it fail with "assert" error , go to file /tensorflow/tsl/framework/fixedpoint/MatMatProductAVX2.h and replace "assert" to "eigen_assert" (this is a problem in this pre release version, but in master branch was solved
+
+# BUILD THE PACKAGE
+
+./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+
+ (you can save this file in /tmp for future use)
+ 
+ # AND FINALLYYYY INSTALL THE PACKAGE:
+ 
+ pip install /tmp/tensorflow_pkg/tensorflow-2.12.0rc0-cp310-cp310-linux_x86_64.whl
 
 
 
