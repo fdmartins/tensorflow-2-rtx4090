@@ -4,6 +4,9 @@ How to build tensorflow 2 for cuda 11.8 and cuDNN 8.6 for nvidia RTX4090
 
 Linux Ubuntu 22.04 LTS
 
+# DEPRECATED:
+tensorflow versions after 2.12 is now compatible with cuda 11.8 and RTX4090. Just install using PIP. :-)
+
 
 # Driver
 1) for RTX4090, minimum driver compatible is 520.56.06. This driver comes with Cuda 11.8
